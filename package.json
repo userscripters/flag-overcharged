@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/userscripters/flag-overcharge.git"
+    "url": "git+https://github.com/userscripters/flag-overcharged.git"
   },
   "keywords": [
     "userscripts",
@@ -30,9 +30,9 @@
   "contributors": [],
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/userscripters/flag-overcharge/issues"
+    "url": "https://github.com/userscripters/flag-overcharged/issues"
   },
-  "homepage": "https://github.com/userscripters/flag-overcharge#readme",
+  "homepage": "https://github.com/userscripters/flag-overcharged#readme",
   "devDependencies": {
     "@types/chai": "^4.2.18",
     "@types/chai-as-promised": "^7.1.4",
