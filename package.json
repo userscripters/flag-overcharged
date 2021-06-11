@@ -1,7 +1,7 @@
 {
-  "name": "template",
+  "name": "flag-overcharge",
   "version": "1.0.0",
-  "description": "template repository for userscripters' projects",
+  "description": "Enhancements for flagging experience",
   "icon": "",
   "main": "dist/index.js",
   "scripts": {
@@ -19,21 +19,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/userscripters/template.git"
+    "url": "git+https://github.com/userscripters/flag-overcharge.git"
   },
   "keywords": [
     "userscripts",
-    "stackoverflow"
+    "stackoverflow",
+    "flagging"
   ],
-  "author": "Jane Doe",
-  "contributors": [
-    "John Doe"
-  ],
+  "author": "Oleg Valter",
+  "contributors": [],
   "license": "GPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/userscripters/template/issues"
+    "url": "https://github.com/userscripters/flag-overcharge/issues"
   },
-  "homepage": "https://github.com/userscripters/template#readme",
+  "homepage": "https://github.com/userscripters/flag-overcharge#readme",
   "devDependencies": {
     "@types/chai": "^4.2.18",
     "@types/chai-as-promised": "^7.1.4",
