@@ -1,0 +1,53 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "description": "template repository for userscripters' projects",
+  "icon": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint src --fix --ext .js,.ts",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run test && npm run lint && npm run clean",
+    "postbuild": "npm run headers-tm",
+    "uglify-modern": "uglifyjs dist/modern/* --compress --mangle -o dist/modern/index.min.js",
+    "uglify-legacy": "uglifyjs dist/legacy/* --compress --mangle -o dist/legacy/index.min.js",
+    "build-modern": "tsc --outDir dist/modern && npm run uglify-modern && npm run postbuild",
+    "build-legacy": "tsc --target es5 --outDir dist/legacy && npm run uglify-legacy && npm run postbuild",
+    "build-all": "npm run prebuild && npm run build-legacy && npm run build-modern && npm run postbuild",
+    "headers-tm": "generate tampermonkey --output dist/headers.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/userscripters/template.git"
+  },
+  "keywords": [
+    "userscripts",
+    "stackoverflow"
+  ],
+  "author": "Jane Doe",
+  "contributors": [
+    "John Doe"
+  ],
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/userscripters/template/issues"
+  },
+  "homepage": "https://github.com/userscripters/template#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.18",
+    "@types/chai-as-promised": "^7.1.4",
+    "@types/mocha": "^8.2.2",
+    "@types/node": "^15.12.1",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "@userscripters/generate-headers": "^1.4.0",
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^7.28.0",
+    "mocha": "^8.4.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.2.4",
+    "uglify-js": "^3.13.9"
+  }
+}
