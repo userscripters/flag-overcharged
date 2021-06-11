@@ -1,11 +1,11 @@
 "use strict";
 ((_w, d) => {
-    const flagModalQuery = "#popup-flag-post";
+    const flagModalQueries = ["#popup-flag-post", "#popup-close-question"];
     const submitBtnQuery = ".js-popup-submit";
     const savedData = {};
     const findRecord = (records, skipped) => {
         return records.find(({ addedNodes }) => [...addedNodes].some((node) => !skipped.includes(node.nodeType) &&
-            node.matches(flagModalQuery)));
+            flagModalQueries.some((query) => node.matches(query))));
     };
     const skippedNodeTypes = [Node.COMMENT_NODE, Node.TEXT_NODE];
     const obs = new MutationObserver((records) => {

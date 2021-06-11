@@ -3,7 +3,7 @@ type Inputs = HTMLTextAreaElement | HTMLInputElement;
 type Data = { [name: string]: string };
 
 ((_w, d) => {
-    const flagModalQuery = "#popup-flag-post";
+    const flagModalQueries = ["#popup-flag-post", "#popup-close-question"];
     const submitBtnQuery = ".js-popup-submit";
 
     const savedData: Data = {};
@@ -13,7 +13,9 @@ type Data = { [name: string]: string };
             [...addedNodes].some(
                 (node) =>
                     !skipped.includes(node.nodeType) &&
-                    (<HTMLElement>node).matches(flagModalQuery)
+                    flagModalQueries.some((query) =>
+                        (<HTMLElement>node).matches(query)
+                    )
             )
         );
     };

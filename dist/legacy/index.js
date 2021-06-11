@@ -21,7 +21,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
     return to;
 };
 (function (_w, d) {
-    var flagModalQuery = "#popup-flag-post";
+    var flagModalQueries = ["#popup-flag-post", "#popup-close-question"];
     var submitBtnQuery = ".js-popup-submit";
     var savedData = {};
     var findRecord = function (records, skipped) {
@@ -29,7 +29,9 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
             var addedNodes = _a.addedNodes;
             return __spreadArray([], __read(addedNodes)).some(function (node) {
                 return !skipped.includes(node.nodeType) &&
-                    node.matches(flagModalQuery);
+                    flagModalQueries.some(function (query) {
+                        return node.matches(query);
+                    });
             });
         });
     };
