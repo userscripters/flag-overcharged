@@ -5,6 +5,7 @@
   "icon": "",
   "main": "dist/index.js",
   "scripts": {
+    "test": "mocha -r ts-node/register",
     "lint": "eslint src --fix --ext .js,.ts",
     "clean": "rm -rf dist",
     "prebuild": "npm run test && npm run lint && npm run clean",
@@ -44,6 +45,7 @@
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
     "eslint": "^7.28.0",
+    "jsdom": "^16.6.0",
     "mocha": "^9.0.0",
     "ts-node": "^10.0.0",
     "typescript": "^4.2.4",
