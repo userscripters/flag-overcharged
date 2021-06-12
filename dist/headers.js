@@ -5,5 +5,5 @@
 // @name            flag-overcharge
 // @source          git+https://github.com/userscripters/flag-overcharged.git
 // @supportURL      https://github.com/userscripters/flag-overcharged/issues
-// @version         1.0.0
+// @version         1.1.0
 // ==/UserScript==
