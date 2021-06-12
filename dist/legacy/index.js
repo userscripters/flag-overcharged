@@ -23,7 +23,16 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 (function (_w, d) {
     var flagModalQueries = ["#popup-flag-post", "#popup-close-question"];
     var submitBtnQuery = ".js-popup-submit";
-    var savedData = {};
+    var skey = "_flag-overcharged";
+    var save = function (data) {
+        try {
+            localStorage.setItem(skey, JSON.stringify(data));
+        }
+        catch (error) {
+            console.debug("failed to persist input data: " + error);
+        }
+    };
+    var load = function () { return JSON.parse(localStorage.getItem(skey) || "{}"); };
     var findRecord = function (records, skipped) {
         return records.find(function (_a) {
             var addedNodes = _a.addedNodes;
@@ -35,6 +44,22 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
             });
         });
     };
+    var throttle = function (cbk, period) {
+        if (period === void 0) { period = 100; }
+        var throttled = false;
+        return function () {
+            var args = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                args[_i] = arguments[_i];
+            }
+            if (!throttled) {
+                throttled = true;
+                setTimeout(function () { return (throttled = false); }, period);
+                return cbk.apply(void 0, __spreadArray([], __read(args)));
+            }
+        };
+    };
+    var savedData = load();
     var skippedNodeTypes = [Node.COMMENT_NODE, Node.TEXT_NODE];
     var obs = new MutationObserver(function (records) {
         var record = findRecord(records, skippedNodeTypes);
@@ -42,11 +67,12 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
             return;
         var _a = __read(record.addedNodes, 1), flagModule = _a[0];
         var modal = flagModule;
-        modal.addEventListener("input", function (_a) {
+        modal.addEventListener("input", throttle(function (_a) {
             var target = _a.target;
             var _b = target, name = _b.name, value = _b.value;
             savedData[name] = value;
-        });
+            save(savedData);
+        }));
         modal.addEventListener("click", function (_a) {
             var target = _a.target;
             if (!target.matches(submitBtnQuery))

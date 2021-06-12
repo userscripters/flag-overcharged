@@ -2,11 +2,31 @@
 ((_w, d) => {
     const flagModalQueries = ["#popup-flag-post", "#popup-close-question"];
     const submitBtnQuery = ".js-popup-submit";
-    const savedData = {};
+    const skey = "_flag-overcharged";
+    const save = (data) => {
+        try {
+            localStorage.setItem(skey, JSON.stringify(data));
+        }
+        catch (error) {
+            console.debug(`failed to persist input data: ${error}`);
+        }
+    };
+    const load = () => JSON.parse(localStorage.getItem(skey) || "{}");
     const findRecord = (records, skipped) => {
         return records.find(({ addedNodes }) => [...addedNodes].some((node) => !skipped.includes(node.nodeType) &&
             flagModalQueries.some((query) => node.matches(query))));
     };
+    const throttle = (cbk, period = 100) => {
+        let throttled = false;
+        return (...args) => {
+            if (!throttled) {
+                throttled = true;
+                setTimeout(() => (throttled = false), period);
+                return cbk(...args);
+            }
+        };
+    };
+    const savedData = load();
     const skippedNodeTypes = [Node.COMMENT_NODE, Node.TEXT_NODE];
     const obs = new MutationObserver((records) => {
         const record = findRecord(records, skippedNodeTypes);
@@ -14,10 +34,11 @@
             return;
         const { addedNodes: [flagModule], } = record;
         const modal = flagModule;
-        modal.addEventListener("input", ({ target }) => {
+        modal.addEventListener("input", throttle(({ target }) => {
             const { name, value } = target;
             savedData[name] = value;
-        });
+            save(savedData);
+        }));
         modal.addEventListener("click", ({ target }) => {
             if (!target.matches(submitBtnQuery))
                 return;
