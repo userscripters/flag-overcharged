@@ -4,8 +4,15 @@ import { JSDOM } from "jsdom";
 
 type Area = HTMLTextAreaElement;
 
-const appendDist = async (d: Document) => {
-    const script = await readFile("./dist/modern/index.js", {
+const config = {
+    paths: {
+        html: "./test/fixtures/popup.html",
+        script: "./test/fixtures/userscript.js",
+    },
+};
+
+const appendUserscript = async (d: Document) => {
+    const script = await readFile(config.paths.script, {
         encoding: "utf-8",
     });
     d.body.append(`<script>${script}</script>`);
@@ -22,8 +29,7 @@ const dispatchInput = (
     custom.dispatchEvent(ev);
 };
 
-const getPopup = () =>
-    readFile("./test/fixtures/popup.html", { encoding: "utf-8" });
+const getPopup = () => readFile(config.paths.html, { encoding: "utf-8" });
 
 describe("main", () => {
     it("should save input correctly", async () => {
@@ -33,7 +39,7 @@ describe("main", () => {
             window: { document, InputEvent },
         } = new JSDOM(content, { runScripts: "dangerously" });
 
-        await appendDist(document);
+        await appendUserscript(document);
 
         const modal = document.getElementById("popup-flag-post")!;
         const text = "test value";
@@ -59,7 +65,7 @@ describe("main", () => {
             window: { document, InputEvent },
         } = new JSDOM(content, { storageQuota: 0, runScripts: "dangerously" });
 
-        await appendDist(document);
+        await appendUserscript(document);
 
         const modal = document.getElementById("popup-flag-post")!;
         const text = "no quota, but still works";
