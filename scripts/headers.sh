@@ -1,3 +1,3 @@
 #!/bin/bash
 
-generate tampermonkey -o dist/headers.js -m $(cat .matches)
+generate-headers tampermonkey -o dist/headers.js -m $(cat .matches)
