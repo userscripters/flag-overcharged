@@ -1,6 +1,16 @@
+/// <reference types="@userscripters/stackexchange-global-types" />
+
 type Inputs = HTMLTextAreaElement | HTMLInputElement;
 
 type Data = { [name: string]: string };
+
+type FlagResult = {
+    FlagType: number;
+    Message: string;
+    Outcome: number;
+    ResultChangedState: boolean;
+    Success: boolean;
+};
 
 /**
  * @summary saves data to local storage
@@ -57,8 +67,10 @@ const throttle = <T extends (...args: any[]) => any>(
 };
 
 window.addEventListener("load", () => {
+    const scriptName = "flag-overcharged";
     const flagModalQueries = ["#popup-flag-post", "#popup-close-question"];
     const submitBtnQuery = ".js-popup-submit";
+    const postMenuQuery = ".answer .js-post-menu > div:first-child";
     const skey = "_flag-overcharged";
 
     const savedData: Data = load(skey);
@@ -103,5 +115,62 @@ window.addEventListener("load", () => {
     obs.observe(document, {
         subtree: true,
         childList: true,
+    });
+
+    document.querySelectorAll<HTMLElement>(postMenuQuery).forEach((menuWrapper) => {
+        const itemWrapper = document.createElement("div");
+        itemWrapper.classList.add("flex--item");
+
+        const { postId } = menuWrapper.closest<HTMLElement>(".js-post-menu")?.dataset || {};
+        if (!postId) {
+            console.debug(`[${scriptName}] missing post id`, menuWrapper);
+            return StackExchange.helpers.showToast(
+                "Failed to find answer id",
+                { type: "danger" }
+            );
+        }
+
+        const quickflagNAA = document.createElement("button");
+        quickflagNAA.classList.add("s-btn", "s-btn__link");
+        quickflagNAA.textContent = "NAA";
+        quickflagNAA.title = "Quickflag as NAA";
+        quickflagNAA.type = "button";
+
+        quickflagNAA.addEventListener("click", async () => {
+            const url = `${location.origin}/flags/posts/${postId}/add/AnswerNotAnAnswer`;
+
+            const { fkey } = StackExchange.options.user;
+            if (!fkey) {
+                console.debug(`[${scriptName}] missing user fkey`);
+                return StackExchange.helpers.showToast("Unauthorized", { type: "danger" });
+            }
+
+            const res = await fetch(url, {
+                method: "POST",
+                body: new URLSearchParams({
+                    fkey,
+                    otherText: "",
+                    overrideWarning: "false",
+                })
+            });
+
+            if (!res.ok) {
+                console.debug(`[${scriptName}] failed to flag as NAA`);
+                return StackExchange.helpers.showToast(
+                    "Something went wrong when quickflagging as NAA",
+                    { type: "danger" }
+                );
+            }
+
+            const { Success, Message }: FlagResult = await res.json();
+            console.debug(`[${scriptName}] NAA flagging status: ${Success}`);
+            return StackExchange.helpers.showToast(
+                Message,
+                { type: Success ? "success" : "danger" }
+            );
+        });
+
+        itemWrapper.append(quickflagNAA);
+        menuWrapper.append(itemWrapper);
     });
 });
