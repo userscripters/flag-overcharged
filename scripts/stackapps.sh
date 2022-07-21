@@ -1,0 +1,12 @@
+generate-stackapps \
+    --about "" \
+    --chrome "101.0.4951.67" \
+    --excerpt "Flag Overcharged is a set of enhancements for flagging experience" \
+    --install "https://github.com/userscripters/flag-overcharged/raw/master/dist/modern/index.user.js" \
+    --minified "https://github.com/userscripters/flag-overcharged/raw/master/dist/modern/index.min.user.js" \
+    --language "TypeScript" \
+    --org-name "UserScripters" \
+    --org-url "https://github.com/userscripters" \
+    --room "https://chat.stackoverflow.com/rooms/214345" \
+    --tag "script" \
+    --tag "posts"
