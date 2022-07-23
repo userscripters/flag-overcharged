@@ -164,14 +164,14 @@ window.addEventListener("load", () => {
         modal.addEventListener("click", ({ target }) => {
             if (!(<HTMLElement>target).matches(submitBtnQuery)) return;
 
-            const inputs = modal.querySelectorAll<Inputs>("input, textarea");
+            const inputs = modal.querySelectorAll<Inputs>("input[type=text], textarea");
             inputs.forEach(
                 (input) => (input.value = savedData[input.name] = "")
             );
         });
 
         Object.entries(savedData).forEach(([name, value]) => {
-            const input = modal.querySelector<Inputs>(`[name=${name}]`);
+            const input = modal.querySelector<Inputs>(`[name='${name}']`);
             if (!input) return;
             input.value = value;
         });
