@@ -12,6 +12,8 @@ type FlagResult = {
     Success: boolean;
 };
 
+type QuickflagType = "NAA";
+
 /**
  * @summary saves data to local storage
  * @param key data key
@@ -64,6 +66,69 @@ const throttle = <T extends (...args: any[]) => any>(
             return callback(...args);
         }
     };
+};
+
+/**
+ * @summary map of flag types to enpoints to POST to add the flag
+ */
+const flagTypeToEndpointMap: Record<QuickflagType, string> = {
+    NAA: "AnswerNotAnAnswer"
+};
+
+/**
+ * @summary creates a quickflag button
+ * @param scriptName name of the userscript
+ * @param type flag type
+ * @param postId id of the post to flag
+ */
+const makeQuickflagButton = (
+    scriptName: string,
+    type: QuickflagType,
+    postId: number | string,
+) => {
+    const quickflagNAA = document.createElement("button");
+    quickflagNAA.classList.add("s-btn", "s-btn__link");
+    quickflagNAA.textContent = type;
+    quickflagNAA.title = `Quickflag as ${type}`;
+    quickflagNAA.type = "button";
+
+    const endpoint = flagTypeToEndpointMap[type];
+
+    quickflagNAA.addEventListener("click", async () => {
+        const url = `${location.origin}/flags/posts/${postId}/add/${endpoint}`;
+
+        const { fkey } = StackExchange.options.user;
+        if (!fkey) {
+            console.debug(`[${scriptName}] missing user fkey`);
+            return StackExchange.helpers.showToast("Unauthorized", { type: "danger" });
+        }
+
+        const res = await fetch(url, {
+            method: "POST",
+            body: new URLSearchParams({
+                fkey,
+                otherText: "",
+                overrideWarning: "false",
+            })
+        });
+
+        if (!res.ok) {
+            console.debug(`[${scriptName}] failed to flag as ${type}`);
+            return StackExchange.helpers.showToast(
+                `Something went wrong when quickflagging as ${type}`,
+                { type: "danger" }
+            );
+        }
+
+        const { Success, Message }: FlagResult = await res.json();
+        console.debug(`[${scriptName}] ${type} flagging status: ${Success}`);
+        return StackExchange.helpers.showToast(
+            Message,
+            { type: Success ? "success" : "danger" }
+        );
+    });
+
+    return quickflagNAA;
 };
 
 window.addEventListener("load", () => {
@@ -130,45 +195,7 @@ window.addEventListener("load", () => {
             );
         }
 
-        const quickflagNAA = document.createElement("button");
-        quickflagNAA.classList.add("s-btn", "s-btn__link");
-        quickflagNAA.textContent = "NAA";
-        quickflagNAA.title = "Quickflag as NAA";
-        quickflagNAA.type = "button";
-
-        quickflagNAA.addEventListener("click", async () => {
-            const url = `${location.origin}/flags/posts/${postId}/add/AnswerNotAnAnswer`;
-
-            const { fkey } = StackExchange.options.user;
-            if (!fkey) {
-                console.debug(`[${scriptName}] missing user fkey`);
-                return StackExchange.helpers.showToast("Unauthorized", { type: "danger" });
-            }
-
-            const res = await fetch(url, {
-                method: "POST",
-                body: new URLSearchParams({
-                    fkey,
-                    otherText: "",
-                    overrideWarning: "false",
-                })
-            });
-
-            if (!res.ok) {
-                console.debug(`[${scriptName}] failed to flag as NAA`);
-                return StackExchange.helpers.showToast(
-                    "Something went wrong when quickflagging as NAA",
-                    { type: "danger" }
-                );
-            }
-
-            const { Success, Message }: FlagResult = await res.json();
-            console.debug(`[${scriptName}] NAA flagging status: ${Success}`);
-            return StackExchange.helpers.showToast(
-                Message,
-                { type: Success ? "success" : "danger" }
-            );
-        });
+        const quickflagNAA = makeQuickflagButton(scriptName, "NAA", postId);
 
         itemWrapper.append(quickflagNAA);
         menuWrapper.append(itemWrapper);
