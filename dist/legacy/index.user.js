@@ -27,7 +27,7 @@
 // @run-at         document-start
 // @source         git+https://github.com/userscripters/flag-overcharged.git
 // @supportURL     https://github.com/userscripters/flag-overcharged/issues
-// @version        1.2.0
+// @version        1.3.0
 // ==/UserScript==
 
 "use strict";
@@ -126,16 +126,19 @@ var throttle = function (callback, period) {
     };
 };
 var flagTypeToEndpointMap = {
-    NAA: "AnswerNotAnAnswer"
+    NAA: "AnswerNotAnAnswer",
+    VLQ: "PostLowQuality",
 };
 var makeQuickflagButton = function (scriptName, type, postId) {
-    var quickflagNAA = document.createElement("button");
-    quickflagNAA.classList.add("s-btn", "s-btn__link");
-    quickflagNAA.textContent = type;
-    quickflagNAA.title = "Quickflag as ".concat(type);
-    quickflagNAA.type = "button";
+    var itemWrapper = document.createElement("div");
+    itemWrapper.classList.add("flex--item");
+    var quickflag = document.createElement("button");
+    quickflag.classList.add("s-btn", "s-btn__link");
+    quickflag.textContent = type;
+    quickflag.title = "Quickflag as ".concat(type);
+    quickflag.type = "button";
     var endpoint = flagTypeToEndpointMap[type];
-    quickflagNAA.addEventListener("click", function () { return __awaiter(void 0, void 0, void 0, function () {
+    quickflag.addEventListener("click", function () { return __awaiter(void 0, void 0, void 0, function () {
         var url, fkey, res, _a, Success, Message;
         return __generator(this, function (_b) {
             switch (_b.label) {
@@ -168,7 +171,8 @@ var makeQuickflagButton = function (scriptName, type, postId) {
             }
         });
     }); });
-    return quickflagNAA;
+    itemWrapper.append(quickflag);
+    return itemWrapper;
 };
 window.addEventListener("load", function () {
     var scriptName = "flag-overcharged";
@@ -211,15 +215,13 @@ window.addEventListener("load", function () {
     });
     document.querySelectorAll(postMenuQuery).forEach(function (menuWrapper) {
         var _a;
-        var itemWrapper = document.createElement("div");
-        itemWrapper.classList.add("flex--item");
         var postId = (((_a = menuWrapper.closest(".js-post-menu")) === null || _a === void 0 ? void 0 : _a.dataset) || {}).postId;
         if (!postId) {
             console.debug("[".concat(scriptName, "] missing post id"), menuWrapper);
             return StackExchange.helpers.showToast("Failed to find answer id", { type: "danger" });
         }
         var quickflagNAA = makeQuickflagButton(scriptName, "NAA", postId);
-        itemWrapper.append(quickflagNAA);
-        menuWrapper.append(itemWrapper);
+        var quickflagVLQ = makeQuickflagButton(scriptName, "VLQ", postId);
+        menuWrapper.append(quickflagVLQ, quickflagNAA);
     });
 });

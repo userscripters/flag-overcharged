@@ -1,6 +1,6 @@
 {
   "name": "flag-overcharged",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Enhancements for flagging experience",
   "icon": "",
   "main": "dist/index.js",

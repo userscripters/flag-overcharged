@@ -4,7 +4,7 @@ script posts
 
 
 <!-- thumbnail:  -->
-<!-- version: 1.2.0 -->
+<!-- version: 1.3.0 -->
 <!-- tag: script -->
 <!-- excerpt: Flag Overcharged is a set of enhancements for flagging experience -->
 
@@ -19,7 +19,7 @@ The script is licensed under the [GPL-3.0-or-later](https://spdx.org/licenses/GP
 
 ### Download
 
-Latest version: 1.2.0
+Latest version: 1.3.0
 
 [Install](https://github.com/userscripters/flag-overcharged/raw/master/dist/modern/index.user.js) | [Minified](https://github.com/userscripters/flag-overcharged/raw/master/dist/modern/index.min.user.js)
 
@@ -36,7 +36,7 @@ Version number means "last tested on":
 
 | Version    | Description |
 | ---------- | ----------- |
-| 1.2.0 |             |
+| 1.3.0 |             |
 
 ## Contact
 
