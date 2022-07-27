@@ -12,7 +12,7 @@ type FlagResult = {
     Success: boolean;
 };
 
-type QuickflagType = "NAA";
+type QuickflagType = "NAA" | "VLQ";
 
 /**
  * @summary saves data to local storage
@@ -72,7 +72,8 @@ const throttle = <T extends (...args: any[]) => any>(
  * @summary map of flag types to enpoints to POST to add the flag
  */
 const flagTypeToEndpointMap: Record<QuickflagType, string> = {
-    NAA: "AnswerNotAnAnswer"
+    NAA: "AnswerNotAnAnswer",
+    VLQ: "PostLowQuality",
 };
 
 /**
@@ -196,8 +197,9 @@ window.addEventListener("load", () => {
         }
 
         const quickflagNAA = makeQuickflagButton(scriptName, "NAA", postId);
+        const quickflagVLQ = makeQuickflagButton(scriptName, "VLQ", postId);
 
-        itemWrapper.append(quickflagNAA);
+        itemWrapper.append(quickflagVLQ, quickflagNAA);
         menuWrapper.append(itemWrapper);
     });
 });
