@@ -87,15 +87,18 @@ const makeQuickflagButton = (
     type: QuickflagType,
     postId: number | string,
 ) => {
-    const quickflagNAA = document.createElement("button");
-    quickflagNAA.classList.add("s-btn", "s-btn__link");
-    quickflagNAA.textContent = type;
-    quickflagNAA.title = `Quickflag as ${type}`;
-    quickflagNAA.type = "button";
+    const itemWrapper = document.createElement("div");
+    itemWrapper.classList.add("flex--item");
+
+    const quickflag = document.createElement("button");
+    quickflag.classList.add("s-btn", "s-btn__link");
+    quickflag.textContent = type;
+    quickflag.title = `Quickflag as ${type}`;
+    quickflag.type = "button";
 
     const endpoint = flagTypeToEndpointMap[type];
 
-    quickflagNAA.addEventListener("click", async () => {
+    quickflag.addEventListener("click", async () => {
         const url = `${location.origin}/flags/posts/${postId}/add/${endpoint}`;
 
         const { fkey } = StackExchange.options.user;
@@ -129,7 +132,8 @@ const makeQuickflagButton = (
         );
     });
 
-    return quickflagNAA;
+    itemWrapper.append(quickflag);
+    return itemWrapper;
 };
 
 window.addEventListener("load", () => {
@@ -184,9 +188,6 @@ window.addEventListener("load", () => {
     });
 
     document.querySelectorAll<HTMLElement>(postMenuQuery).forEach((menuWrapper) => {
-        const itemWrapper = document.createElement("div");
-        itemWrapper.classList.add("flex--item");
-
         const { postId } = menuWrapper.closest<HTMLElement>(".js-post-menu")?.dataset || {};
         if (!postId) {
             console.debug(`[${scriptName}] missing post id`, menuWrapper);
@@ -199,7 +200,6 @@ window.addEventListener("load", () => {
         const quickflagNAA = makeQuickflagButton(scriptName, "NAA", postId);
         const quickflagVLQ = makeQuickflagButton(scriptName, "VLQ", postId);
 
-        itemWrapper.append(quickflagVLQ, quickflagNAA);
-        menuWrapper.append(itemWrapper);
+        menuWrapper.append(quickflagVLQ, quickflagNAA);
     });
 });
