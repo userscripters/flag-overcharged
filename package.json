@@ -50,7 +50,7 @@
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.55.0",
-    "jsdom": "^22.1.0",
+    "jsdom": "^23.0.1",
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.3.2",
